@@ -3,15 +3,15 @@
 use plotters::prelude::*;
 
 /// Plots a function provided.
-pub fn plot<'a>(
-    function: fn(f64) -> f64,
+pub fn plot<'a, F>(
+    function: F,
     left: f64,
     right: f64,
     n: usize,
     independent: &'a str,
     dependent: &'a str,
     filename: &'a str,
-) {
+) where F: Fn(f64) -> f64 {
     let title = &format!("{} vs. {}", dependent, independent);
 
     let drawing_area = BitMapBackend::new(filename, (1280, 1024))

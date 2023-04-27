@@ -15,6 +15,7 @@ fn main() {
         cli.variable,
         cli.left,
         cli.right,
+        cli.allvars,
     );
     
     // Plot SFC
@@ -22,6 +23,7 @@ fn main() {
         cli.variable,
         cli.left,
         cli.right,
+        cli.allvars,
     );
 }
 

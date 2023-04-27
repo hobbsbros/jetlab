@@ -1,6 +1,9 @@
 //! Abstracts over optimization variables.
 
-use crate::constants::*;
+use crate::{
+    constants::*,
+    VarSelector,
+};
 
 #[derive(Clone, Copy, Debug)]
 /// Holds all engine optimization variables.
@@ -63,9 +66,36 @@ pub struct Variables {
     pub fuel_cp: f64,
 }
 
+use VarSelector::*;
+
 impl Variables {
     /// Computes inlet area (in m2).
     pub fn inlet_area(&self) -> f64 {
         0.25 * PI * self.inlet_diameter.powi(2)
+    }
+
+    /// Gets a mutable reference to a field based on a `VarSelector`.
+    pub fn get_reference(&mut self, selection: VarSelector) -> &mut f64 {
+        match selection {
+            InletMachNumber             => &mut self.inlet_mach_number,
+            InletDiameter               => &mut self.inlet_diameter,
+            InletEfficiency             => &mut self.inlet_efficiency,
+            FanPressureRatio            => &mut self.fan_pressure_ratio,
+            FanEfficiency               => &mut self.fan_efficiency,
+            FanBypass                   => &mut self.fan_bypass,
+            LpcPressureRatio            => &mut self.lpc_pressure_ratio,
+            LpcEfficiency               => &mut self.lpc_efficiency,
+            HpcPressureRatio            => &mut self.hpc_pressure_ratio,
+            HpcEfficiency               => &mut self.hpc_efficiency,
+            HpcDischargeTemp            => &mut self.hpc_discharge_temp,
+            CombustorPressureRecovery   => &mut self.combustor_pressure_recovery,
+            CombustorEfficiency         => &mut self.combustor_efficiency,
+            HptInletTemp                => &mut self.hpt_inlet_temp,
+            HptEfficiency               => &mut self.hpt_efficiency,
+            LptEfficiency               => &mut self.lpt_efficiency,
+            BypassPressureRecovery      => &mut self.bypass_pressure_recovery,
+            FuelDeltaH                  => &mut self.fuel_delta_h,
+            FuelCp                      => &mut self.fuel_cp,
+        }
     }
 }

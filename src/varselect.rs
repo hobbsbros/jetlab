@@ -79,7 +79,7 @@ impl From<String> for VarSelector {
             "fuel_delta_h" => FuelDeltaH,
             "fuel_cp" => FuelCp,
             _ => {
-                println!("Invalid variable name.  Type `jetlab` for help.");
+                println!("[FATAL] Invalid variable name {}.  Type `jetlab` for help.", &string);
                 process::exit(0);
             },
         }
