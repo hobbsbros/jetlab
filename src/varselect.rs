@@ -1,5 +1,7 @@
 //! Allows the user to select for a single variable.
 
+use std::process;
+
 #[derive(Clone, Copy, Debug)]
 /// Enumerates the variables the user may select.
 pub enum VarSelector {
@@ -51,5 +53,35 @@ impl From<VarSelector> for String {
         };
 
         string.to_string()
+    }
+}
+
+impl From<String> for VarSelector {
+    fn from(string: String) -> Self {
+        match string.as_str() {
+            "inlet_mach_number" => InletMachNumber,
+            "inlet_diameter" => InletDiameter,
+            "inlet_efficiency" => InletEfficiency,
+            "fan_pressure_ratio" => FanPressureRatio,
+            "fan_efficiency" => FanEfficiency,
+            "fan_bypass" => FanBypass,
+            "lpc_pressure_ratio" => LpcPressureRatio,
+            "lpc_efficiency" => LpcEfficiency,
+            "hpc_pressure_ratio" => HpcPressureRatio,
+            "hpc_efficiency" => HpcEfficiency,
+            "hpc_discharge_temp" => HpcDischargeTemp,
+            "combustor_pressure_recovery" => CombustorPressureRecovery,
+            "combustor_efficiency" => CombustorEfficiency,
+            "hpt_inlet_temp" => HptInletTemp,
+            "hpt_efficiency" => HptEfficiency,
+            "lpt_efficiency" => LptEfficiency,
+            "bypass_pressure_recovery" => BypassPressureRecovery,
+            "fuel_delta_h" => FuelDeltaH,
+            "fuel_cp" => FuelCp,
+            _ => {
+                println!("Invalid variable name.  Type `jetlab` for help.");
+                process::exit(0);
+            },
+        }
     }
 }

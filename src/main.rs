@@ -7,9 +7,6 @@ use jetlab::{
 };
 
 fn main() {
-    // Analyze baseline engine
-    analyze_baseline();
-
     // Read user input
     let cli = Cli::new();
 
@@ -28,6 +25,7 @@ fn main() {
     );
 }
 
+#[allow(dead_code)]
 fn analyze_baseline() {
     let fan = Turbofan::new();
     let default = VANILLA_PLUS;
