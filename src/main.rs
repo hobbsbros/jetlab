@@ -7,6 +7,28 @@ use jetlab::{
 };
 
 fn main() {
+    // Analyze baseline engine
+    analyze_baseline();
+
+    // Read user input
+    let cli = Cli::new();
+
+    // Plot thrust
+    Turbofan::plot_thrust(
+        cli.variable,
+        cli.left,
+        cli.right,
+    );
+    
+    // Plot SFC
+    Turbofan::plot_sfc(
+        cli.variable,
+        cli.left,
+        cli.right,
+    );
+}
+
+fn analyze_baseline() {
     let fan = Turbofan::new();
     let default = VANILLA_PLUS;
     let (thrust, sfc) = fan.analyze(default);
@@ -14,13 +36,4 @@ fn main() {
     println!("========");
     println!("Thrust: {:.6} N", thrust);
     println!("SFC: {:.6} kg / h-N", sfc);
-    println!("\n");
-
-    let cli = Cli::new();
-
-    Turbofan::plot_thrust(
-        cli.variable,
-        cli.left,
-        cli.right,
-    );
 }

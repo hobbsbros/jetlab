@@ -1,6 +1,9 @@
 //! Enables command-line interface for the Jetlab executable.
 
-use std::env;
+use std::{
+    env,
+    process,
+};
 
 use crate::VarSelector;
 
@@ -17,6 +20,12 @@ impl Cli {
         let args = env::args().collect::<Vec<String>>();
 
         use VarSelector::*;
+
+        if args.len() != 4 {
+            println!("JETLAB");
+            println!("\nUsage:\n\t$ jetlab [VARIABLE] [LOWER_BOUND] [UPPER_BOUND]");
+            process::exit(0);
+        }
 
         let variable = match args[1].as_str() {
             "inlet_mach_number" => InletMachNumber,

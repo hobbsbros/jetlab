@@ -206,4 +206,124 @@ impl Turbofan {
             &format!("{} Plot.png", varname),
         );
     }
+
+    /// Plot specific fuel consumption as a function of one variable.
+    pub fn plot_sfc(
+        selected: VarSelector,
+        left: f64,
+        right: f64,
+    ) {
+        use VarSelector::*;
+        let n: usize = 1000;
+
+        let function = match selected {
+            InletMachNumber             => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.inlet_mach_number = var;
+                Self::new().analyze(variables).1
+            },
+            InletDiameter               => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.inlet_diameter = var;
+                Self::new().analyze(variables).1
+            },
+            InletEfficiency             => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.inlet_efficiency = var;
+                Self::new().analyze(variables).1
+            },
+            FanPressureRatio            => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.fan_pressure_ratio = var;
+                Self::new().analyze(variables).1
+            },
+            FanEfficiency               => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.fan_efficiency = var;
+                Self::new().analyze(variables).1
+            },
+            FanBypass                   => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.fan_bypass = var;
+                Self::new().analyze(variables).1
+            },
+            LpcPressureRatio            => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.lpc_pressure_ratio = var;
+                Self::new().analyze(variables).1
+            },
+            LpcEfficiency               => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.lpc_efficiency = var;
+                Self::new().analyze(variables).1
+            },
+            HpcPressureRatio            => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.hpc_pressure_ratio = var;
+                Self::new().analyze(variables).1
+            },
+            HpcEfficiency               => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.hpc_efficiency = var;
+                Self::new().analyze(variables).1
+            },
+            HpcDischargeTemp            => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.hpc_discharge_temp = var;
+                Self::new().analyze(variables).1
+            },
+            CombustorPressureRecovery   => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.combustor_pressure_recovery = var;
+                Self::new().analyze(variables).1
+            },
+            CombustorEfficiency         => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.combustor_efficiency = var;
+                Self::new().analyze(variables).1
+            },
+            HptInletTemp                => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.hpt_inlet_temp = var;
+                Self::new().analyze(variables).1
+            },
+            HptEfficiency               => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.hpt_efficiency = var;
+                Self::new().analyze(variables).1
+            },
+            LptEfficiency               => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.lpt_efficiency = var;
+                Self::new().analyze(variables).1
+            },
+            BypassPressureRecovery      => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.bypass_pressure_recovery = var;
+                Self::new().analyze(variables).1
+            },
+            FuelDeltaH                  => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.fuel_delta_h = var;
+                Self::new().analyze(variables).1
+            },
+            FuelCp                      => |var| {
+                let mut variables = VANILLA_PLUS;
+                variables.fuel_cp = var;
+                Self::new().analyze(variables).1
+            },
+        };
+
+        let varname: String = selected.into();
+
+        plot(
+            function,
+            left,
+            right,
+            n,
+            "SFC",
+            &varname,
+            &format!("{} Plot.png", varname),
+        );
+    }
 }
