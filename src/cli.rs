@@ -22,7 +22,7 @@ impl Cli {
         use VarSelector::*;
 
         if args.len() != 4 {
-            println!("JETLAB");
+            println!("\n\nJETLAB");
             println!("\nUsage:\n\t$ jetlab [VARIABLE] [LOWER_BOUND] [UPPER_BOUND]");
             process::exit(0);
         }
