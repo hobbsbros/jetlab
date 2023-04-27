@@ -32,7 +32,7 @@ impl From<VarSelector> for String {
     fn from(var: VarSelector) -> Self {
         let string = match var {
             InletMachNumber             => "Inlet Mach Number",
-            InletDiameter               => "Inlet Diameter",
+            InletDiameter               => "Inlet Diameter (m)",
             InletEfficiency             => "Inlet Efficiency",
             FanPressureRatio            => "Fan Pressure Ratio",
             FanEfficiency               => "Fan Efficiency",
@@ -41,15 +41,15 @@ impl From<VarSelector> for String {
             LpcEfficiency               => "LPC Efficiency",
             HpcPressureRatio            => "HPC Pressure Ratio",
             HpcEfficiency               => "HPC Efficiency",
-            HpcDischargeTemp            => "HPC Discharge Temperature",
+            HpcDischargeTemp            => "HPC Discharge Temperature (K)",
             CombustorPressureRecovery   => "Combustor Pressure Recovery Coefficient",
             CombustorEfficiency         => "Combustor Efficiency",
-            HptInletTemp                => "HPT Inlet Temperature",
+            HptInletTemp                => "HPT Inlet Temperature (K)",
             HptEfficiency               => "HPT Efficiency",
             LptEfficiency               => "LPT Efficiency",
             BypassPressureRecovery      => "Bypass Pressure Recovery Coefficient",
-            FuelDeltaH                  => "Fuel Enthalpy",
-            FuelCp                      => "Fuel CP",
+            FuelDeltaH                  => "Fuel Enthalpy (J/kg)",
+            FuelCp                      => "Fuel CP (J/kg-K)",
         };
 
         string.to_string()
