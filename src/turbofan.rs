@@ -201,8 +201,8 @@ impl Turbofan {
             left,
             right,
             n,
-            "Thrust (N)",
             &varname,
+            "Thrust (N)",
             &format!("{} Thrust Plot.png", varname),
         );
     }
@@ -321,8 +321,8 @@ impl Turbofan {
             left,
             right,
             n,
-            "Specific Fuel Consumption (kg/N-hr)",
             &varname,
+            "Specific Fuel Consumption (kg/N-hr)",
             &format!("{} SFC Plot.png", varname),
         );
     }

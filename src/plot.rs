@@ -8,11 +8,11 @@ pub fn plot<'a>(
     left: f64,
     right: f64,
     n: usize,
-    dependent: &'a str,
     independent: &'a str,
+    dependent: &'a str,
     filename: &'a str,
 ) {
-    let title = &format!("{} vs. {}", independent, dependent);
+    let title = &format!("{} vs. {}", dependent, independent);
 
     let drawing_area = BitMapBackend::new(filename, (1280, 1024))
         .into_drawing_area();
