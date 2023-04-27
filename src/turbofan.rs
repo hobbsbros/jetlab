@@ -322,7 +322,7 @@ impl Turbofan {
             right,
             n,
             &varname,
-            "Specific Fuel Consumption (kg/N-hr)",
+            "SFC (kg/N-hr)",
             &format!("{} SFC Plot.png", varname),
         );
     }
