@@ -6,7 +6,10 @@ use crate::Variables;
 pub const VANILLA_PLUS: Variables = include!("vanilla-plus.jetlab");
 
 /// Optimization rate.
-pub const OPTIMIZATION_RATE: f64 = 0.01;
+pub const OPTIMIZATION_RATE: f64 = 0.1;
+
+/// Maximum allowable overall pressure ratio.
+pub const OPR: f64 = 47.0;
 
 /// Minimum allowable thrust.
 pub const MIN_THRUST: f64 = 80067.989;
@@ -33,19 +36,19 @@ pub const CP_AIR: f64 = 1004.50;
 pub const PI: f64 = 3.141549265358979323846264;
 
 /// Limitations on gradient ascent optimizations.
-pub const INLET_MACH_NUMBER_MIN: f64                = 0.20;
-pub const INLET_MACH_NUMBER_MAX: f64                = 0.67;
+pub const INLET_MACH_NUMBER_MIN: f64                = 0.200;
+pub const INLET_MACH_NUMBER_MAX: f64                = 0.635;
 pub const INLET_DIAMETER_MIN: f64                   = 1.2192;
 pub const INLET_DIAMETER_MAX: f64                   = 1.3716;
 pub const FAN_PRESSURE_RATIO_MIN: f64               = 1.0;
 pub const FAN_PRESSURE_RATIO_MAX: f64               = 1.8;
 pub const FAN_BYPASS_MIN: f64                       = 1.0;
-pub const FAN_BYPASS_MAX: f64                       = 13.0;
+pub const FAN_BYPASS_MAX: f64                       = 11.0;
 pub const LPC_PRESSURE_RATIO_MIN: f64               = 1.0;
 pub const LPC_PRESSURE_RATIO_MAX: f64               = 3.0;
 pub const HPC_PRESSURE_RATIO_MIN: f64               = 1.0;
 pub const HPC_PRESSURE_RATIO_MAX: f64               = 22.5;
 pub const HPC_DISCHARGE_TEMP_MIN: f64               = 0.0;
-pub const HPC_DISCHARGE_TEMP_MAX: f64               = 1527.594;
+pub const HPC_DISCHARGE_TEMP_MAX: f64               = 1172.039;
 pub const HPT_INLET_TEMP_MIN: f64                   = 0.0;
-pub const HPT_INLET_TEMP_MAX: f64                   = 2005.372;
+pub const HPT_INLET_TEMP_MAX: f64                   = 1699.817;

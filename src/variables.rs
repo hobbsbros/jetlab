@@ -150,7 +150,7 @@ impl Display for Variables {
         output.push_str(&format!("LPC pressure ratio: {:.6}\n", self.lpc_pressure_ratio));
         output.push_str(&format!("LPC efficiency: {:.6}%\n", self.lpc_efficiency*100.0));
         output.push_str(&format!("HPC pressure ratio: {:.6}\n", self.hpc_pressure_ratio));
-        output.push_str(&format!("HPC efficiency: {:.6}%\n", self.inlet_mach_number*100.0));
+        output.push_str(&format!("HPC efficiency: {:.6}%\n", self.hpc_efficiency*100.0));
         output.push_str(&format!("HPC discharge temperature: {:.6} K\n", self.hpc_discharge_temp));
         output.push_str(&format!("Combustor pressure recovery coefficient: {:.6}\n", self.combustor_pressure_recovery));
         output.push_str(&format!("Combustor efficiency: {:.6}%\n", self.combustor_efficiency*100.0));

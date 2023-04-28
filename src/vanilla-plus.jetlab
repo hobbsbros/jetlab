@@ -3,8 +3,8 @@
 // See UPGRADES.md for a summary of changes made
 
 Variables {
-    inlet_mach_number:              0.67,
-    inlet_diameter:                 1.27,
+    inlet_mach_number:              0.635,
+    inlet_diameter:                 1.3716,
     inlet_efficiency:               0.98,
     fan_pressure_ratio:             1.43,
     fan_efficiency:                 0.918,
@@ -12,11 +12,11 @@ Variables {
     lpc_pressure_ratio:             1.389,
     lpc_efficiency:                 0.918,
     hpc_pressure_ratio:             22.5,
-    hpc_efficiency:                 0.87,
+    hpc_efficiency:                 0.888,
     hpc_discharge_temp:             922.0389,
     combustor_pressure_recovery:    0.98,
     combustor_efficiency:           0.99,
-    hpt_inlet_temp:                 2005.372,
+    hpt_inlet_temp:                 1631.622,
     hpt_efficiency:                 0.905,
     lpt_efficiency:                 0.922,
     bypass_pressure_recovery:       0.98,

@@ -175,8 +175,10 @@ impl Turbofan {
     }
 
     /// Perform a gradient ascent optimization step for minimizing SFC.
-    fn step_sfc_optimization(&self, variables: Variables) -> Variables {
+    fn step_sfc_optimization(&self, mut variables: Variables) -> Variables {
         let step = self.sfc_gradient(variables).mult(OPTIMIZATION_RATE);
+
+        variables.hpc_pressure_ratio = OPR / variables.lpc_pressure_ratio / variables.fan_pressure_ratio;
         
         variables + step.mult(-1.0)
     }
@@ -194,12 +196,19 @@ impl Turbofan {
     pub fn optimize_sfc(&self, mut variables: Variables) -> Variables {
         #[allow(unused_assignments)]
         let (mut t, mut sfc) = (MIN_THRUST, 0.0);
+        let mut i = 0;
         while t >= MIN_THRUST {
             variables = self.step_sfc_optimization(variables);
             (t, sfc) = self.analyze(variables);
-            println!("Thrust: {:.8} N | SFC: {:.8} kg/N-hr", t, sfc);
+            
+            if i % 1_000_000 == 0 {
+                println!("Thrust: {:.8} N | SFC: {:.8} kg/N-hr", t, sfc);
+            }
+
+            i += 1;
         }
 
+        println!("\nFinal thrust: {:.8} lbf\nFinal SFC: {:.8} lbm/lbf-hr", t*0.224809, sfc*2.20462262185/0.224809);
         variables
     }
 
