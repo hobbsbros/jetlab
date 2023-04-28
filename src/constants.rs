@@ -12,7 +12,7 @@ pub const OPTIMIZATION_RATE: f64 = 0.1;
 pub const OPR: f64 = 47.0;
 
 /// Minimum allowable thrust.
-pub const MIN_THRUST: f64 = 80067.989;
+pub const MIN_THRUST: f64 = 80067.989 * 1.01;
 
 /// Ratio of specific heats for air.
 pub const GAMMA: f64 = 1.400;
