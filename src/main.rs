@@ -2,7 +2,6 @@
 
 use jetlab::{
     Cli,
-    constants::*,
     Turbofan,
 };
 
@@ -10,30 +9,46 @@ fn main() {
     // Read user input
     let cli = Cli::new();
 
-    // Plot thrust
-    Turbofan::plot_thrust(
-        cli.variable,
-        cli.left,
-        cli.right,
-        cli.allvars,
-    );
-    
-    // Plot SFC
-    Turbofan::plot_sfc(
-        cli.variable,
-        cli.left,
-        cli.right,
-        cli.allvars,
-    );
-}
-
-#[allow(dead_code)]
-fn analyze_baseline() {
+    // Set up a turbofan
     let fan = Turbofan::new();
-    let default = VANILLA_PLUS;
-    let (thrust, sfc) = fan.analyze(default);
-    println!("BASELINE");
-    println!("========");
-    println!("Thrust: {:.6} N", thrust);
-    println!("SFC: {:.6} kg / h-N", sfc);
+
+    if let Cli::Plot {
+        variable,
+        left,
+        right,
+        allvars,
+    } = cli {
+        let variables = allvars;
+
+        // Plot thrust
+        fan.plot_thrust(
+            variable,
+            left,
+            right,
+            variables,
+        );
+        
+        // Plot SFC
+        fan.plot_sfc(
+            variable,
+            left,
+            right,
+            variables,
+        );
+    } else if let Cli::Optimize {
+        allvars,
+        steps,
+    } = cli {
+        // let thrust_opt = fan.optimize_thrust(allvars, steps);
+        let sfc_opt = fan.optimize_sfc(allvars, steps);
+
+        println!("OPTIMIZATION RESULTS");
+        println!("====================\n");
+
+        // println!("Thrust focus");
+        // println!("{}\n", thrust_opt);
+
+        println!("SFC focus");
+        println!("{}", sfc_opt);
+    }
 }

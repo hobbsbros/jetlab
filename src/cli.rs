@@ -12,11 +12,17 @@ use crate::{
 };
 
 /// Holds command-line inputs.
-pub struct Cli {
-    pub variable: VarSelector,
-    pub left: f64,
-    pub right: f64,
-    pub allvars: Variables,
+pub enum Cli {
+    Plot {
+        variable: VarSelector,
+        left: f64,
+        right: f64,
+        allvars: Variables,
+    },
+    Optimize {
+        steps: usize,
+        allvars: Variables,
+    },
 }
 
 impl Cli {
@@ -24,74 +30,131 @@ impl Cli {
     pub fn new() -> Self {
         let args = env::args().collect::<Vec<String>>();
 
-        if args.len() < 4 {
-            Self::help();
-        }
+        if &args[1] == "plot" {
+            let variable: VarSelector = args[2].clone().into();
+            
+            let left = match str::parse::<f64>(&args[3]) {
+                Ok (f) => f,
+                Err (_) => {
+                    println!("[FATAL] Could not parse input {}", args[3].clone());
+                    process::exit(0);
+                }
+            };
+            let right = match str::parse::<f64>(&args[4]) {
+                Ok (f) => f,
+                Err (_) => {
+                    println!("[FATAL] Could not parse input {}", args[4].clone());
+                    process::exit(0);
+                }
+            };
 
-        let variable: VarSelector = args[1].clone().into();
-        
-        let left = match str::parse::<f64>(&args[2]) {
-            Ok (f) => f,
-            Err (_) => {
-                println!("[FATAL] Could not parse input {}", args[2].clone());
-                process::exit(0);
-            }
-        };
-        let right = match str::parse::<f64>(&args[3]) {
-            Ok (f) => f,
-            Err (_) => {
-                println!("[FATAL] Could not parse input {}", args[3].clone());
-                process::exit(0);
-            }
-        };
+            // Initialize variables
+            let mut allvars = VANILLA_PLUS;
 
-        // Initialize variables
-        let mut allvars = VANILLA_PLUS;
-
-        let mut i = 4;
-        while i < args.len() {
-            let arg = &args[i];
-
-            if arg == "--fix" {
-                i += 1;
+            let mut i = 5;
+            while i < args.len() {
                 let arg = &args[i];
 
-                // Stop when you find another flag
-                while !(&args[i]).starts_with("--") {
-                    let option: VarSelector = args[i].clone().into();
+                if arg == "--fix" {
+                    i += 1;
+                    let arg = &args[i];
 
-                    if args.len() == i + 1 {
-                        println!("[FATAL] Please specify a value for {}", arg);
-                        process::exit(0);
-                    }
+                    // Stop when you find another flag
+                    while !(&args[i]).starts_with("--") {
+                        let option: VarSelector = args[i].clone().into();
 
-                    let value = match str::parse::<f64>(&args[i + 1]) {
-                        Ok (f) => f,
-                        Err (_) => {
-                            println!("[FATAL] Could not parse {} as numeric value", &args[i + 1]);
+                        if args.len() == i + 1 {
+                            println!("[FATAL] Please specify a value for {}", arg);
                             process::exit(0);
-                        },
-                    };
+                        }
 
-                    *allvars.get_reference(option) = value;
+                        let value = match str::parse::<f64>(&args[i + 1]) {
+                            Ok (f) => f,
+                            Err (_) => {
+                                println!("[FATAL] Could not parse {} as numeric value", &args[i + 1]);
+                                process::exit(0);
+                            },
+                        };
 
-                    i += 2;
-                    if i >= args.len() {
-                        break;
+                        *allvars.get_reference(option) = value;
+
+                        i += 2;
+                        if i >= args.len() {
+                            break;
+                        }
                     }
+                } else {
+                    println!("[ERROR] Unrecognized flag {}.  Type `jetlab` for help.", arg);
                 }
-            } else {
-                println!("[ERROR] Unrecognized flag {}.  Type `jetlab` for help.", arg);
+
+                i += 1;
             }
 
-            i += 1;
-        }
+            Self::Plot {
+                variable,
+                left,
+                right,
+                allvars,
+            }
+        } else if &args[1] == "optimize" {
+            let steps = match str::parse::<usize>(&args[2]) {
+                Ok (f) => f,
+                Err (_) => {
+                    println!("[FATAL] Could not parse {} as integer value", &args[2]);
+                    process::exit(0);
+                },
+            };
 
-        Self {
-            variable,
-            left,
-            right,
-            allvars,
+            // Initialize variables
+            let mut allvars = VANILLA_PLUS;
+
+            let mut i = 4;
+            while i < args.len() {
+                let arg = &args[i];
+
+                if arg == "--fix" {
+                    i += 1;
+                    let arg = &args[i];
+
+                    // Stop when you find another flag
+                    while !(&args[i]).starts_with("--") {
+                        let option: VarSelector = args[i].clone().into();
+
+                        if args.len() == i + 1 {
+                            println!("[FATAL] Please specify a value for {}", arg);
+                            process::exit(0);
+                        }
+
+                        let value = match str::parse::<f64>(&args[i + 1]) {
+                            Ok (f) => f,
+                            Err (_) => {
+                                println!("[FATAL] Could not parse {} as numeric value", &args[i + 1]);
+                                process::exit(0);
+                            },
+                        };
+
+                        *allvars.get_reference(option) = value;
+
+                        i += 2;
+                        if i >= args.len() {
+                            break;
+                        }
+                    }
+                } else {
+                    println!("[ERROR] Unrecognized flag {}.  Type `jetlab` for help.", arg);
+                }
+
+                i += 1;
+            }
+
+            Self::Optimize {
+                steps,
+                allvars,
+            }
+        } else {
+            println!("[FATAL] Unrecognized subcommand {}", &args[1]);
+
+            Self::help();
         }
     }
 
@@ -99,8 +162,11 @@ impl Cli {
     pub fn help() -> ! {
         println!("JETLAB");
 
-        println!("\nUsage:\n\t$ jetlab [VARIABLE] [LOWER_BOUND] [UPPER_BOUND]");
-        println!("\t$ jetlab [VARIABLE] [LOWER_BOUND] [UPPER_BOUND] --fix [VARIABLE] [VALUE]");
+        println!("\nUsage:\n\t$ jetlab [SUBCOMMAND]");
+        println!("\t$ jetlab plot [VARIABLE] [LOWER_BOUND] [UPPER_BOUND]");
+        println!("\t$ jetlab plot [VARIABLE] [LOWER_BOUND] [UPPER_BOUND] --fix [VARIABLE] [VALUE]");
+        println!("\t$ jetlab optimize [VARIABLE]");
+        println!("\t$ jetlab optimize [VARIABLE] --fix [VARIABLE] [VALUE]");
 
         println!("\nFree Variables:");
         println!("\tinlet_mach_number");

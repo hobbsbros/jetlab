@@ -87,8 +87,126 @@ impl Turbofan {
         (thrust, sfc)
     }
 
+    /// Compute the partial derivative of the thrust at a given value with respect to a given variable.
+    pub fn delta_thrust(&self, variables: Variables, var: VarSelector) -> f64 {
+        let dx: f64 = 1.0E-6;
+
+        let mut variables_high = variables;
+        *variables_high.get_reference(var) += dx;
+
+        let mut variables_low = variables;
+        *variables_low.get_reference(var) -= dx;
+
+        (self.analyze(variables_high).0 - self.analyze(variables_low).0)/(2.0*dx)
+    }
+
+    /// Compute the partial derivative of the SFC at a given value with respect to a given variable.
+    pub fn delta_sfc(&self, variables: Variables, var: VarSelector) -> f64 {
+        let dx = 0.001;
+
+        let mut variables_high = variables;
+        *variables_high.get_reference(var) += dx;
+
+        let mut variables_low = variables;
+        *variables_low.get_reference(var) -= dx;
+
+        (self.analyze(variables_high).1 - self.analyze(variables_low).1)/(2.0*dx)
+    }
+
+    /// Compute the gradient of the thrust value with respect to all variables.
+    pub fn thrust_gradient(&self, variables: Variables) -> Variables {
+        use VarSelector::*;
+
+        Variables {
+            inlet_mach_number: self.delta_thrust(variables, InletMachNumber),
+            inlet_diameter: self.delta_thrust(variables, InletDiameter),
+            inlet_efficiency: 0.0,
+            fan_pressure_ratio: self.delta_thrust(variables, FanPressureRatio),
+            fan_efficiency: 0.0,
+            fan_bypass: self.delta_thrust(variables, FanBypass),
+            lpc_pressure_ratio: self.delta_thrust(variables, LpcPressureRatio),
+            lpc_efficiency: 0.0,
+            hpc_pressure_ratio: self.delta_thrust(variables, HpcPressureRatio),
+            hpc_efficiency: 0.0,
+            hpc_discharge_temp: self.delta_thrust(variables, HpcDischargeTemp),
+            combustor_pressure_recovery: 0.0,
+            combustor_efficiency: 0.0,
+            hpt_inlet_temp: self.delta_thrust(variables, HptInletTemp),
+            hpt_efficiency: 0.0,
+            lpt_efficiency: 0.0,
+            bypass_pressure_recovery: 0.0,
+            fuel_delta_h: 0.0,
+            fuel_cp: 0.0,
+        }
+    }
+
+    /// Compute the gradient of the SFC value with respect to all variables.
+    pub fn sfc_gradient(&self, variables: Variables) -> Variables {
+        use VarSelector::*;
+
+        Variables {
+            inlet_mach_number: self.delta_sfc(variables, InletMachNumber),
+            inlet_diameter: self.delta_sfc(variables, InletDiameter),
+            inlet_efficiency: 0.0,
+            fan_pressure_ratio: self.delta_sfc(variables, FanPressureRatio),
+            fan_efficiency: 0.0,
+            fan_bypass: self.delta_sfc(variables, FanBypass),
+            lpc_pressure_ratio: self.delta_sfc(variables, LpcPressureRatio),
+            lpc_efficiency: 0.0,
+            hpc_pressure_ratio: self.delta_sfc(variables, HpcPressureRatio),
+            hpc_efficiency: 0.0,
+            hpc_discharge_temp: self.delta_sfc(variables, HpcDischargeTemp),
+            combustor_pressure_recovery: 0.0,
+            combustor_efficiency: 0.0,
+            hpt_inlet_temp: self.delta_sfc(variables, HptInletTemp),
+            hpt_efficiency: 0.0,
+            lpt_efficiency: 0.0,
+            bypass_pressure_recovery: 0.0,
+            fuel_delta_h: 0.0,
+            fuel_cp: 0.0,
+        }
+    }
+
+    /// Perform a gradient ascent optimization step for maximizing thrust.
+    fn step_thrust_optimization(&self, variables: Variables) -> Variables {
+        let step = self.thrust_gradient(variables).mult(OPTIMIZATION_RATE);
+        
+        variables + step
+    }
+
+    /// Perform a gradient ascent optimization step for minimizing SFC.
+    fn step_sfc_optimization(&self, variables: Variables) -> Variables {
+        let step = self.sfc_gradient(variables).mult(OPTIMIZATION_RATE);
+        
+        variables + step.mult(-1.0)
+    }
+
+    /// Perform gradient ascent optimization to maximize thrust.
+    pub fn optimize_thrust(&self, mut variables: Variables, n: usize) -> Variables {
+        for _ in 0..n {
+            variables = self.step_thrust_optimization(variables);
+        }
+
+        variables
+    }
+
+    /// Perform gradient ascent optimization to minimize SFC.
+    pub fn optimize_sfc(&self, mut variables: Variables, n: usize) -> Variables {
+        for _ in 0..n {
+            variables = self.step_sfc_optimization(variables);
+            let (t, sfc) = self.analyze(variables);
+            println!("Thrust: {:.8} N | SFC: {:.8} kg/N-hr", t, sfc);
+            if t < MIN_THRUST {
+                break;
+            }
+        }
+
+        variables
+    }
+
     /// Plot thrust as a function of one variable.
     pub fn plot_thrust(
+        &self,
         selected: VarSelector,
         left: f64,
         right: f64,
@@ -117,6 +235,7 @@ impl Turbofan {
 
     /// Plot specific fuel consumption as a function of one variable.
     pub fn plot_sfc(
+        &self,
         selected: VarSelector,
         left: f64,
         right: f64,
