@@ -20,7 +20,6 @@ pub enum Cli {
         allvars: Variables,
     },
     Optimize {
-        steps: usize,
         allvars: Variables,
     },
 }
@@ -97,14 +96,6 @@ impl Cli {
                 allvars,
             }
         } else if &args[1] == "optimize" {
-            let steps = match str::parse::<usize>(&args[2]) {
-                Ok (f) => f,
-                Err (_) => {
-                    println!("[FATAL] Could not parse {} as integer value", &args[2]);
-                    process::exit(0);
-                },
-            };
-
             // Initialize variables
             let mut allvars = VANILLA_PLUS;
 
@@ -148,7 +139,6 @@ impl Cli {
             }
 
             Self::Optimize {
-                steps,
                 allvars,
             }
         } else {

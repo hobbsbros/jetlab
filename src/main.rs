@@ -37,10 +37,9 @@ fn main() {
         );
     } else if let Cli::Optimize {
         allvars,
-        steps,
     } = cli {
         // let thrust_opt = fan.optimize_thrust(allvars, steps);
-        let sfc_opt = fan.optimize_sfc(allvars, steps);
+        let sfc_opt = fan.optimize_sfc(allvars);
 
         println!("OPTIMIZATION RESULTS");
         println!("====================\n");

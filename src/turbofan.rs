@@ -191,14 +191,13 @@ impl Turbofan {
     }
 
     /// Perform gradient ascent optimization to minimize SFC.
-    pub fn optimize_sfc(&self, mut variables: Variables, n: usize) -> Variables {
-        for _ in 0..n {
+    pub fn optimize_sfc(&self, mut variables: Variables) -> Variables {
+        #[allow(unused_assignments)]
+        let (mut t, mut sfc) = (MIN_THRUST, 0.0);
+        while t >= MIN_THRUST {
             variables = self.step_sfc_optimization(variables);
-            let (t, sfc) = self.analyze(variables);
+            (t, sfc) = self.analyze(variables);
             println!("Thrust: {:.8} N | SFC: {:.8} kg/N-hr", t, sfc);
-            if t < MIN_THRUST {
-                break;
-            }
         }
 
         variables
