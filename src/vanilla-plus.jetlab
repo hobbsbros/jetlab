@@ -16,7 +16,7 @@ Variables {
     hpc_discharge_temp:             922.0389,
     combustor_pressure_recovery:    0.98,
     combustor_efficiency:           0.99,
-    hpt_inlet_temp:                 1527.594,
+    hpt_inlet_temp:                 1588.706,
     hpt_efficiency:                 0.87,
     lpt_efficiency:                 0.89,
     bypass_pressure_recovery:       0.98,
