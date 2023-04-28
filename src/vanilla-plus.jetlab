@@ -1,6 +1,5 @@
 // VANILLA PLUS
 // Upgraded baseline
-// See UPGRADES.md for a summary of changes made
 
 Variables {
     inlet_mach_number:              0.635,
