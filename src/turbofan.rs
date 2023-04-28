@@ -180,7 +180,7 @@ impl Turbofan {
 
         variables.hpc_pressure_ratio = OPR / variables.lpc_pressure_ratio / variables.fan_pressure_ratio;
         
-        variables + step.mult(-1.0)
+        variables + step.mult(1.0)
     }
 
     /// Perform gradient ascent optimization to maximize thrust.

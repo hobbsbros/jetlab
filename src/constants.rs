@@ -11,8 +11,14 @@ pub const OPTIMIZATION_RATE: f64 = 0.1;
 /// Maximum allowable overall pressure ratio.
 pub const OPR: f64 = 47.0;
 
+/// Number of aircraft engines.
+pub const ENGINE_COUNT: usize = 2;
+
+/// Thrust safety margin.
+pub const THRUST_SAFETY_MARGIN: f64 = 0.01;
+
 /// Minimum allowable thrust.
-pub const MIN_THRUST: f64 = 80067.989 * 1.01;
+pub const MIN_THRUST: f64 = 2.0 * 80067.989 * (1.0 + THRUST_SAFETY_MARGIN) / ENGINE_COUNT as f64;
 
 /// Ratio of specific heats for air.
 pub const GAMMA: f64 = 1.400;
