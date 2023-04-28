@@ -81,7 +81,7 @@ impl Cli {
                     }
                 }
             } else {
-                println!("[ERROR] Unrecognized flag {}.  Type `jetlab` for help.", arg).
+                println!("[ERROR] Unrecognized flag {}.  Type `jetlab` for help.", arg);
             }
 
             i += 1;

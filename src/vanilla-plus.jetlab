@@ -3,7 +3,7 @@
 // See UPGRADES.md for a summary of changes made
 
 Variables {
-    inlet_mach_number:              0.4,
+    inlet_mach_number:              0.67,
     inlet_diameter:                 1.27,
     inlet_efficiency:               0.98,
     fan_pressure_ratio:             1.5,
